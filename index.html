@@ -2,22 +2,280 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Minecraft 2.0</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>Minecraft 3D Real</title>
 <style>
-body{margin:0;background:#0b0e14;font-family:monospace;display:flex;flex-direction:column;justify-content:center;align-items:center;height:100vh;color:#fff;text-align:center;}
-.box{border:2px solid #00ffcc;padding:25px;border-radius:8px;background:#10151f;box-shadow:0 0 15px #00ffcc;max-width:280px;}
-.btn{background:#00ffcc;color:#10151f;border:none;padding:12px 20px;font-weight:bold;font-size:16px;border-radius:6px;cursor:pointer;margin-top:15px;width:100%;}
+body{margin:0;background:#0b0e14;overflow:hidden;font-family:monospace;display:flex;flex-direction:column;justify-content:center;align-items:center;height:100vh;color:#fff;user-select:none;}
+#authBlock{position:absolute;width:100%;height:100%;background:#10151f;z-index:200;display:flex;flex-direction:column;justify-content:center;align-items:center;}
+.auth-input{background:#1a2233;border:2px solid #00ffcc;padding:12px;color:#fff;font-size:16px;border-radius:6px;margin:8px;width:220px;font-family:monospace;}
+#gameUI{display:none;width:100%;height:100vh;position:relative;flex-direction:column;justify-content:space-between;align-items:center;box-sizing:border-box;padding:5px;}
+canvas{background:#70b5ff;border:3px solid #00ffcc;box-shadow:0 0 15px rgba(0,255,200,0.3);display:block;}
+.hud-top{width:100%;max-width:360px;display:flex;justify-content:space-between;font-size:11px;font-weight:bold;color:#00ffcc;text-shadow:1px 1px #000;padding:2px;}
+.joystick-panel{position:absolute;bottom:20px;left:20px;display:grid;grid-template-columns:repeat(3,1fr);gap:5px;width:120px;z-index:10;}
+.action-panel{position:absolute;bottom:20px;right:20px;display:flex;flex-direction:column;gap:10px;z-index:10;}
+.circle-btn{background:rgba(26,34,51,0.85);color:#00ffcc;border:2px solid #00ffcc;width:46px;height:46px;border-radius:50%;font-weight:bold;font-size:11px;text-align:center;line-height:42px;cursor:pointer;box-shadow:0 0(10px #00ffcc);box-sizing:border-box;padding:0;}
+.circle-btn:active{background:#00ffcc;color:#10151f;}
+.circle-btn.attack{border-color:#ff0055;color:#ff0055;box-shadow:0 0 10px #ff0055;}
+.circle-btn.attack:active{background:#ff0055;color:#fff;}
+#invBar{width:100%;max-width:360px;background:rgba(26,34,51,0.9);border:2px solid #00ffcc;border-radius:6px;padding:4px;display:grid;grid-template-columns:repeat(4,1fr);gap:2px;font-size:9px;text-align:center;position:absolute;bottom:5px;left:50%;transform:translateX(-50%);z-index:5;}
+.modal{display:none;position:absolute;top:8%;width:85%;max-width:320px;background:#1c2433;border:3px solid #00ffcc;border-radius:8px;padding:12px;z-index:150;box-shadow:0 0 25px #000;}
+.modal-title{color:#ff0055;font-size:15px;font-weight:bold;margin-bottom:10px;text-align:center;border-bottom:2px dashed #00ffcc;padding-bottom:4px;}
+.craft-row{display:flex;justify-content:space-between;align-items:center;margin:6px 0;font-size:11px;}
 </style>
 </head>
 <body>
-<div class="box">
-<h2 style="color:#00ffcc;margin:0 0 10px 0;">MINECRAFT 2.0</h2>
-<p style="font-size:14px;color:#aaa;margin:0;">Создатель проекта:</p>
-<h3 style="color:#fff;margin:5px 0 20px 0;font-size:20px;">ВЛАДИСЛАВ</h3>
-<p style="font-size:12px;color:#00ffcc;">Запуск персонального 3D мира...</p>
-<button class="btn" onclick="location.href='https://github.io'">ПОДКЛЮЧИТЬСЯ</button>
+<div id="authBlock">
+<h2 style="color:#00ffcc;text-shadow:0 0 10px #00ffcc;margin-bottom:15px;font-size:20px;">MINECRAFT REAL 3D</h2>
+<p id="authStatus" style="color:#aaa;font-size:11px;margin:0 0 10px 0;">Vhod v realnyj trehmernyj mir</p>
+<input type="text" id="username" class="auth-input" placeholder="Login / Nik">
+<input type="password" id="password" class="auth-input" placeholder="Parol">
+<div style="display:flex;gap:10px;margin-top:10px;">
+<button class="circle-btn" style="width:100px;border-radius:6px;" onclick="processAuth('login')">VOYTI</button>
+<button class="circle-btn" style="width:100px;border-radius:6px;border-color:#ff0055;color:#ff0055;" onclick="processAuth('register')">REG</button>
 </div>
+</div>
+<div id="gameUI">
+<div class="hud-top">
+<div>HP:<span id="hp">100</span> | Br:<span id="armor">0</span></div>
+<div>User:<span id="userDisplay" style="color:#fff;">Name</span> | <span id="timeState">Den</span></div>
+</div>
+<canvas id="mcCanvas" width="360" height="340"></canvas>
+<div id="craftModal" class="modal">
+<div class="modal-title">VERSTAK</div>
+<div class="craft-row"><span>Kamen Kirka</span><button class="circle-btn" style="width:60px;height:25px;border-radius:4px;" onclick="craftItem('stone_pick')">OK</button></div>
+<div class="craft-row"><span>Zhelez Mech</span><button class="circle-btn" style="width:60px;height:25px;border-radius:4px;" onclick="craftItem('sword')">OK</button></div>
+<div class="craft-row"><span>Zhelez Kirka</span><button class="circle-btn" style="width:60px;height:25px;border-radius:4px;" onclick="craftItem('iron_pick')">OK</button></div>
+<div class="craft-row"><span>Zhelez Lopata</span><button class="circle-btn" style="width:60px;height:25px;border-radius:4px;" onclick="craftItem('iron_shovel')">OK</button></div>
+<div class="craft-row"><span>Zhelez Bronya</span><button class="circle-btn" style="width:60px;height:25px;border-radius:4px;" onclick="craftItem('iron_armor')">OK</button></div>
+<div class="craft-row"><span>Almaz Bronya</span><button class="circle-btn" style="width:60px;height:25px;border-radius:4px;" onclick="craftItem('dia_armor')">OK</button></div>
+<button class="circle-btn" style="width:100%;height:30px;border-radius:6px;background:#ff0055;color:#fff;" onclick="closeModals()">ZAKRIT</button>
+</div>
+<div id="furnaceModal" class="modal">
+<div class="modal-title">PECH</div>
+<div class="craft-row"><span>Plavit Zhelezo</span><button class="circle-btn" style="width:60px;height:25px;border-radius:4px;" onclick="smeltIron()">OK</button></div>
+<button class="circle-btn" style="width:100%;height:30px;border-radius:6px;background:#ff0055;color:#fff;" onclick="closeModals()">ZAKRIT</button>
+</div>
+<div id="tradeModal" class="modal">
+<div class="modal-title">ZHITEL</div>
+<div class="craft-row"><span>5 Kamen to 1 Izumrud</span><button class="circle-btn" style="width:60px;height:25px;border-radius:4px;" onclick="tradeItem('sell_stone')">OK</button></div>
+<div class="craft-row"><span>1 Almaz to 2 Izumruda</span><button class="circle-btn" style="width:60px;height:25px;border-radius:4px;" onclick="tradeItem('buy_dia')">OK</button></div>
+<button class="circle-btn" style="width:100%;height:30px;border-radius:6px;background:#ff0055;color:#fff;" onclick="closeModals()">ZAKRIT</button>
+</div>
+<div class="joystick-panel">
+<div></div><button class="circle-btn" onclick="movePlayer(0,-12)">W</button><div></div>
+<button class="circle-btn" onclick="movePlayer(-12,0)">A</button>
+<button class="circle-btn" onclick="playerJump()">JMP</button>
+<button class="circle-btn" onclick="movePlayer(12,0)">D</button>
+<div></div><button class="circle-btn" onclick="movePlayer(0,12)">S</button><div></div>
+</div>
+<div class="action-panel">
+<button class="circle-btn" onclick="rotateCam(-15)">L-CAM</button>
+<button class="circle-btn" onclick="rotateCam(15)">R-CAM</button>
+<button id="modeBtn" class="circle-btn" onclick="toggleMode()">MODE</button>
+<button class="circle-btn" style="background:#55c443;" onclick="openBlockMenu()">ITEM</button>
+<button class="circle-btn attack" onclick="attackMob()">ATK</button>
+</div>
+<div id="invBar">
+<div>Trava:<span id="inv-dirt">0</span></div>
+<div>Kamen:<span id="inv-stone">0</span></div>
+<div>Derevo:<span id="inv-wood">0</span></div>
+<div>Ruda:<span id="inv-iron-ore">0</span></div>
+<div>Slitok:<span id="inv-iron-ingot">0</span></div>
+<div>Almaz:<span id="inv-diamond">0</span></div>
+<div>Izumrud:<span id="inv-emerald">0</span></div>
+<div>Ataka:<span id="inv-dmg">5</span></div>
+</div>
+</div>
+<script>
+const canvas=document.getElementById("mcCanvas");
+const ctx=canvas.getContext("2d");
+let currentUser="";
+let camAngle=0;
+let p={x:0,y:0,z:150,hp:100,armor:0,dmg:5};
+let inv={dirt:0,stone:0,wood:0,ironOre:0,ironIngot:0,diamond:0,emerald:0};
+let tools={stone_pick:false,iron_pick:false,iron_shovel:false};
+let achievements={first_dirt:false,diamond_hunter:false,iron_armor:false};
+let mode="break";let buildType="dirt";let isNight=false,timeTicks=0;
+let blocks=[],mobs=[];
+function processAuth(type){
+let user=document.getElementById("username").value.trim();
+let pass=document.getElementById("password").value.trim();
+if(user===""||pass===""){alert("Vvedite vse!");return;}
+currentUser=user;
+document.getElementById("userDisplay").innerText=user;
+let savedData=localStorage.getItem("mc_save_"+user);
+if(type==='register'){
+if(savedData){alert("Nik zanyat!");return;}
+inv={dirt:5,stone:5,wood:5,ironOre:2,ironIngot:0,diamond:0,emerald:2};
+tools={stone_pick:false,iron_pick:false,iron_shovel:false};
+saveProfileData();alert("Sozdano!");
+}else if(type==='login'){
+if(!savedData){alert("Net profilja!");return;}
+let parsed=JSON.parse(savedData);
+p.armor=parsed.armor||0;p.dmg=parsed.dmg||5;
+inv=parsed.inv||{dirt:0,stone:0,wood:0,ironOre:0,ironIngot:0,diamond:0,emerald:0};
+tools=parsed.tools||{stone_pick:false,iron_pick:false,iron_shovel:false};
+}
+document.getElementById("authBlock").style.display="none";
+document.getElementById("gameUI").style.display="flex";
+initWorld();updateUI();loop();
+                 }
+  
+function saveProfileData(){
+if(!currentUser)return;
+let dataToSave={armor:p.armor,dmg:p.dmg,inv:inv,tools:tools};
+localStorage.setItem("mc_save_"+currentUser,JSON.stringify(dataToSave));
+}
+function initWorld(){
+blocks=[];
+for(let bx=-3;bx<=3;bx++){
+for(let bz=-3;bx<=3;bz++){
+for(let by=0;by<4;by++){
+let type="stone";let hp=5;
+if(by===3){type="dirt";hp=3;}
+else if(by===0){
+let r=Math.random();
+if(r<0.1)type="diamond";hp=15;
+if(r>=0.1&&r<0.3)type="iron_ore";hp=8;
+}
+blocks.push({x:bx*36,y:(by-2)*26,z:bz*36,type:type,hp:hp,maxHp:hp});
+}
+}
+}
+mobs.push({x:30,y:10,z:40,type:"villager",color:"#d2b48c",hp:20});
+}
+function toggleMode(){
+mode=(mode==="break")?"build":"break";
+document.getElementById("modeBtn").innerText=mode.toUpperCase();
+}
+function openBlockMenu(){
+let res=prompt("1-Trava,2-Kamen,3-Derevo,4-Verstak,5-Pech");
+if(res==="1")buildType="dirt";if(res==="2")buildType="stone";if(res==="3")buildType="wood";if(res==="4")buildType="craft_table";if(res==="5")buildType="furnace";
+}
+function rotateCam(dir){
+camAngle+=dir;
+if(camAngle>=360)camAngle-=360;
+if(camAngle<0)camAngle+=360;
+}
+function movePlayer(dx,dz){
+let rad=camAngle*Math.PI/180;
+let cos=Math.cos(rad);
+let sin=Math.sin(rad);
+p.x+=dx*cos-dz*sin;
+p.z+=dx*sin+dz*cos;
+}
+function playerJump(){p.y+=30;setTimeout(()=>{p.y-=30;},250);}
+function closeModals(){document.getElementById("craftModal").style.display="none";document.getElementById("furnaceModal").style.display="none";document.getElementById("tradeModal").style.display="none";}
+canvas.addEventListener("touchstart",(e)=>{
+const rect=canvas.getBoundingClientRect();
+const clickX=e.touches[0].clientX-rect.left;
+const clickY=e.touches[0].clientY-rect.top;
+let clickedTarget=null;
+let rad=camAngle*Math.PI/180;
+let cos=Math.cos(rad);let sin=Math.sin(rad);
+for(let b of blocks){
+let rx=b.x-p.x;let ry=b.y-p.y;let rz=b.z-p.z;
+let rotX=rx*cos+rz*sin;let rotZ=-rx*sin+rz*cos;
+if(rotZ>20){
+let scale=240/rotZ;
+let scrX=canvas.width/2+rotX*scale;
+let scrY=canvas.height/2+ry*scale;
+let sz=28*scale;
+if(clickX>=scrX-sz/2&&clickX<=scrX+sz/2&&clickY>=scrY-sz/2&&clickY<=scrY+sz/2){
+clickedTarget=b;break;
+}
+}
+}
+if(clickedTarget){
+processBlockTouch(clickedTarget);
+}
+});
+function processBlockTouch(b){
+if(mode==="break"){
+let dmgDone=1;
+if(b.type==="dirt"&&tools.iron_shovel)dmgDone=3;
+else if(b.type==="stone"&&tools.iron_pick)dmgDone=3;
+else if(b.type==="stone"&&tools.stone_pick)dmgDone=2;
+b.hp-=dmgDone;
+if(b.hp<=0){
+inv[b.type]++;blocks.splice(blocks.indexOf(b),1);saveProfileData();
+}
+updateUI();
+}else{
+if(b.type==="craft_table"){document.getElementById("craftModal").style.display="block";return;}
+if(b.type==="furnace"){document.getElementById("furnaceModal").style.display="block";return;}
+if(inv[buildType]>0||buildType==="craft_table"||buildType==="furnace"){
+if(buildType!=="craft_table"&&buildType!=="furnace")inv[buildType]--;
+blocks.push({x:b.x,y:b.y-26,z:b.z,type:buildType,hp:5,maxHp:5});
+saveProfileData();updateUI();
+}
+}
+}
+function craftItem(item){
+if(item==='stone_pick'&&inv.stone>=3&&inv.wood>=2){inv.stone-=3;inv.wood-=2;tools.stone_pick=true;}
+else if(item==='sword'&&inv.ironIngot>=2&&inv.wood>=1){inv.ironIngot-=2;inv.wood-=1;p.dmg=15;}
+else if(item==='iron_pick'&&inv.ironIngot>=3&&inv.wood>=2){inv.ironIngot-=3;inv.wood-=2;tools.iron_pick=true;}
+else if(item==='iron_shovel'&&inv.ironIngot>=1&&inv.wood>=2){inv.ironIngot-=1;inv.wood-=2;tools.iron_shovel=true;}
+else if(item==='iron_armor'&&inv.ironIngot>=5){inv.ironIngot-=5;p.armor=30;}
+else if(item==='dia_armor'&&inv.diamond>=5){inv.diamond-=5;p.armor=60;}
+saveProfileData();updateUI();closeModals();
+}
+function smeltIron(){if(inv.ironOre>=1&&inv.wood>=1){inv.ironOre-=1;inv.wood-=1;inv.ironIngot+=1;}saveProfileData();updateUI();closeModals();}
+function tradeItem(type){
+if(type==='sell_stone'&&inv.stone>=5){inv.stone-=5;inv.emerald+=1;}
+else if(type==='buy_dia'&&inv.emerald>=2){inv.emerald-=2;inv.diamond+=1;}
+saveProfileData();updateUI();closeModals();
+}
+function attackMob(){
+for(let m of mobs){
+if(m.type==="zombie"&&Math.abs(m.x-p.x)<50&&Math.abs(m.z-p.z)<50){
+m.hp-=p.dmg;if(m.hp<=0)mobs.splice(mobs.indexOf(m),1);return;
+}
+}
+}
+function updateUI(){
+document.getElementById("inv-dirt").innerText=inv.dirt;document.getElementById("inv-stone").innerText=inv.stone;document.getElementById("inv-wood").innerText=inv.wood;document.getElementById("inv-iron-ore").innerText=inv.ironOre;document.getElementById("inv-iron-ingot").innerText=inv.ironIngot;document.getElementById("inv-diamond").innerText=inv.diamond;document.getElementById("inv-emerald").innerText=inv.emerald;document.getElementById("inv-dmg").innerText=p.dmg;document.getElementById("hp").innerText=Math.floor(p.hp);document.getElementById("armor").innerText=p.armor;
+}
+function update(){
+timeTicks++;if(timeTicks%400===0){isNight=!isNight;document.getElementById("timeState").innerText=isNight?"Noch":"Den";if(!isNight)mobs=mobs.filter(m=>m.type==="villager");}
+if(isNight&&Math.random()<0.03&&mobs.filter(m=>m.type==="zombie").length<2){mobs.push({x:p.x+100,y:10,z:p.z+100,type:"zombie",color:"#2e7d32",hp:30});}
+for(let m of mobs){
+if(m.type==="zombie"){
+if(m.x<p.x)m.x+=1.2;else m.x-=1.2;
+if(m.z<p.z)m.z+=1.2;else m.z-=1.2;
+if(Math.abs(m.x-p.x)<20&&Math.abs(m.z-p.z)<20){
+p.hp-=0.6*(1-p.armor/100);updateUI();
+if(p.hp<=0){p.hp=100;p.x=0;p.z=150;mobs=mobs.filter(m=>m.type==="villager");}
+}
+}
+}
+}
+function draw(){
+ctx.clearRect(0,0,canvas.width,canvas.height);ctx.fillStyle=isNight?"#0d101d":"#70b5ff";ctx.fillRect(0,0,canvas.width,canvas.height);
+let rad=camAngle*Math.PI/180;
+let cos=Math.cos(rad);let sin=Math.sin(rad);
+let sortedBlocks=blocks.map(b=>{
+let rx=b.x-p.x;let ry=b.y-p.y;let rz=b.z-p.z;
+return{b:b,rotZ:(-rx*sin+rz*cos),rotX:(rx*cos+rz*sin),ry:ry};
+}).filter(b=>b.rotZ>15).sort((a,b)=>b.rotZ-a.rotZ);
+for(let sb of sortedBlocks){
+let scale=240/sb.rotZ;let x=canvas.width/2+sb.rotX*scale;let y=canvas.height/2+sb.ry*scale;let sz=30*scale;
+if(sb.b.type==="dirt"){ctx.fillStyle="#8b5a2b";ctx.fillRect(x-sz/2,y-sz/2,sz,sz);ctx.fillStyle="#55c443";ctx.fillRect(x-sz/2,y-sz/2,sz,sz*0.25);}
+else if(sb.b.type==="stone"){ctx.fillStyle="#737373";ctx.fillRect(x-sz/2,y-sz/2,sz,sz);}
+else if(sb.b.type==="diamond"){ctx.fillStyle="#595959";ctx.fillRect(x-sz/2,y-sz/2,sz,sz);ctx.fillStyle="#00ffff";ctx.fillRect(x-sz/6,y-sz/6,sz/3,sz/3);}
+ctx.strokeStyle="rgba(0,0,0,0.3)";ctx.strokeRect(x-sz/2,y-sz/2,sz,sz);
+if(sb.b.hp<sb.b.maxHp){ctx.fillStyle="red";ctx.fillRect(x-sz/2,y-sz/2-6,sz,3);ctx.fillStyle="green";ctx.fillRect(x-sz/2,y-sz/2-6,sz*(sb.b.hp/sb.b.maxHp),3);}
+}
+for(let m of mobs){
+let rx=m.x-p.x;let ry=m.y-p.y;let rz=m.z-p.z;
+let rotX=rx*cos+rz*sin;let rotZ=-rx*sin+rz*cos;
+if(rotZ>15){
+let scale=240/rotZ;let x=canvas.width/2+rotX*scale;let y=canvas.height/2+ry*scale;let w=16*scale;let h=32*scale;
+ctx.fillStyle=m.color;ctx.fillRect(x-w/2,y-h/2,w,h);
+}
+}
+}
+function loop(){update();draw();requestAnimationFrame(loop);}
+</script>
 </body>
 </html>
-
