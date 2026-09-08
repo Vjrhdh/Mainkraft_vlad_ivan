@@ -4,31 +4,29 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
 <link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22Minecraft%22%2C%22short_name%22%3A%22Minecraft%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230b0e14%22%2C%22theme_color%22%3A%22%2355ff55%22%7D">
-<title>Minecraft 3D Ultimate Premium</title>
+<title>Minecraft 3D Premium Fixed</title>
 <style>
 body{margin:0;background:#0b0e14;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,monospace;display:flex;flex-direction:row;justify-content:center;align-items:center;height:100vh;color:#fff;user-select:none;}
 #menuBlock{position:absolute;width:100%;height:100%;background:linear-gradient(90deg,rgba(11,14,20,0.85),rgba(16,21,31,0.6)),url('https://unsplash.com') center/cover;z-index:250;display:flex;flex-direction:row;justify-content:space-around;align-items:center;box-sizing:border-box;padding:20px;}
 #loadingBlock{position:absolute;width:100%;height:100%;background:#0b0e14;z-index:300;display:none;flex-direction:column;justify-content:center;align-items:center;}
 .progress-container{width:260px;height:10px;background:#161d2a;border:2px solid #55ff55;border-radius:10px;overflow:hidden;margin-top:15px;box-shadow:0 0 15px rgba(85,255,85,0.3);}
 .progress-bar{width:0%;height:100%;background:linear-gradient(90deg,#55ff55,#00e5ff);transition:width 0.05s;}
-#authBlock{position:absolute;width:100%;height:100%;background:#0b0e14;z-index:200;display:none;flex-direction:column;justify-content:center;align-items:center;}
-.auth-input{background:#161d2a;border:2px solid #55ff55;padding:12px;color:#fff;font-size:14px;border-radius:10px;margin:6px;width:240px;text-align:center;outline:none;}
-#gameUI{display:none;width:100%;height:100vh;position:relative;flex-direction:row;justify-content:space-between;align-items:center;box-sizing:border-box;padding:10px;}
-canvas{background:linear-gradient(#70b5ff,#90c7ff);border:2px solid rgba(85,255,85,0.4);border-radius:12px;display:block;}
-.hud-top{width:35%;display:flex;flex-direction:column;gap:4px;font-size:10px;font-weight:bold;color:#fff;text-shadow:1px 1px 2px #000;background:rgba(22,29,42,0.7);backdrop-filter:blur(10px);padding:8px 12px;border-radius:14px;position:absolute;top:10px;left:10px;z-index:10;border:1px solid rgba(255,255,255,0.1);}
-.joystick-panel{position:absolute;bottom:15px;left:20px;display:grid;grid-template-columns:repeat(3,1fr);gap:5px;width:110px;z-index:10;}
-.action-panel{position:absolute;bottom:15px;right:20px;display:grid;grid-template-columns:repeat(2,1fr);gap:6px;width:100px;z-index:10;}
-.circle-btn{background:rgba(255,255,255,0.12);backdrop-filter:blur(10px);color:#fff;border:1px solid rgba(255,255,255,0.2);width:42px;height:42px;border-radius:50%;font-weight:bold;font-size:10px;text-align:center;line-height:40px;cursor:pointer;box-shadow:0 4px 10px rgba(0,0,0,0.3);transition:0.15s;outline:none;padding:0;}
+#gameUI{display:none;width:100vw;height:100vh;position:relative;box-sizing:border-box;}
+canvas{width:100vw;height:100vh;background:linear-gradient(#70b5ff,#90c7ff);display:block;position:absolute;top:0;left:0;z-index:1;}
+.hud-top{width:220px;display:flex;flex-direction:column;gap:4px;font-size:10px;font-weight:bold;color:#fff;text-shadow:1px 1px 2px #000;background:rgba(22,29,42,0.7);backdrop-filter:blur(10px);padding:8px 12px;border-radius:14px;position:absolute;top:10px;left:10px;z-index:10;border:1px solid rgba(255,255,255,0.1);}
+.joystick-panel{position:absolute;bottom:10px;left:10px;display:grid;grid-template-columns:repeat(3,1fr);gap:4px;width:105px;z-index:10;}
+.action-panel{position:absolute;bottom:10px;right:10px;display:grid;grid-template-columns:repeat(2,1fr);gap:5px;width:95px;z-index:10;}
+.circle-btn{background:rgba(255,255,255,0.12);backdrop-filter:blur(10px);color:#fff;border:1px solid rgba(255,255,255,0.2);width:38px;height:38px;border-radius:50%;font-weight:bold;font-size:9px;text-align:center;line-height:36px;cursor:pointer;box-shadow:0 4px 10px rgba(0,0,0,0.3);transition:0.15s;outline:none;padding:0;}
 .circle-btn:active{background:#55ff55;color:#000;transform:scale(0.9);box-shadow:0 0 12px #55ff55;}
 .circle-btn.attack{border-color:rgba(255,34,34,0.5);color:#ff5555;background:rgba(255,34,34,0.08);}
 .circle-btn.attack:active{background:#ff2222;color:#fff;box-shadow:0 0 12px #ff2222;}
-#invBar{width:52%;background:rgba(22,29,42,0.85);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:5px;position:absolute;bottom:10px;left:50%;transform:translateX(-50%);z-index:5;box-sizing:border-box;}
-.inv-grid{display:grid;grid-template-columns:repeat(9,1fr);gap:3px;}
-.inv-slot{background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.15);border-radius:6px;font-size:8px;padding:4px 1px;text-align:center;color:#fff;}
+#invBar{width:320px;background:rgba(22,29,42,0.85);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:4px;position:absolute;bottom:8px;left:50%;transform:translateX(-50%);z-index:5;box-sizing:border-box;}
+.inv-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:2px;}
+.inv-slot{background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.15);border-radius:6px;font-size:7px;padding:3px 1px;text-align:center;color:#fff;box-sizing:border-box;overflow:hidden;}
 .inv-slot.active{border-color:#55ff55;background:rgba(85,255,85,0.2);box-shadow:0 0 8px rgba(85,255,85,0.3);}
-.modal{display:none;position:absolute;top:10%;left:50%;transform:translateX(-50%);width:75%;max-width:340px;background:rgba(26,34,51,0.96);backdrop-filter:blur(15px);border:1px solid rgba(255,255,255,0.12);border-radius:16px;padding:12px;z-index:160;}
-.modal-title{color:#ffcc00;font-size:13px;font-weight:bold;margin-bottom:8px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.08);padding-bottom:4px;}
-.craft-row{display:flex;justify-content:space-between;align-items:center;margin:5px 0;font-size:10px;}
+.modal{display:none;position:absolute;top:5%;left:50%;transform:translateX(-50%);width:280px;background:rgba(26,34,51,0.96);backdrop-filter:blur(15px);border:1px solid rgba(255,255,255,0.12);border-radius:16px;padding:10px;z-index:160;}
+.modal-title{color:#ffcc00;font-size:12px;font-weight:bold;margin-bottom:6px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.08);padding-bottom:3px;}
+.craft-row{display:flex;justify-content:space-between;align-items:center;margin:4px 0;font-size:9px;}
 .mc-logo{font-size:38px;color:#55ff55;font-weight:900;text-shadow:0 4px 12px rgba(85,255,85,0.3);letter-spacing:4px;}
 .menu-nav-btn{background:linear-gradient(135deg,#1e2633,#161d2a);color:#fff;border:1px solid rgba(255,255,255,0.12);width:190px;height:38px;font-weight:bold;font-size:12px;text-align:center;line-height:36px;cursor:pointer;margin:5px 0;border-radius:10px;transition:0.2s;outline:none;}
 .menu-nav-btn:active{background:linear-gradient(135deg,#55ff55,#00e5ff);color:#000;transform:scale(0.96);box-shadow:0 0 15px rgba(85,255,85,0.4);}
@@ -37,8 +35,7 @@ canvas{background:linear-gradient(#70b5ff,#90c7ff);border:2px solid rgba(85,255,
 .admin-tab{background:none;border:none;color:#888;font-weight:bold;font-size:12px;cursor:pointer;outline:none;padding:5px 10px;}
 .admin-tab.active{color:#55ff55;border-bottom:2px solid #55ff55;}
 .admin-content{flex:1;background:rgba(0,0,0,0.3);border-radius:10px;padding:10px;overflow-y:auto;font-size:11px;}
-#worldModal,#customPromptModal,#createWorldPopup{display:none;position:absolute;top:15%;width:85%;max-width:320px;background:rgba(22,29,42,0.96);backdrop-filter:blur(20px);border:1px solid rgba(85,255,85,0.3);border-radius:24px;padding:15px;z-index:260;text-align:center;box-shadow:0 20px 50px rgba(0,0,0,0.7);}
-.calendar-text{font-size:10px;color:#00e5ff;font-family:monospace;font-weight:bold;margin-top:2px;text-shadow:0 0 5px rgba(0,229,255,0.5);}
+#worldModal,#customPromptModal,#createWorldPopup{display:none;position:absolute;top:10%;left:50%;transform:translateX(-50%);width:280px;background:rgba(22,29,42,0.96);backdrop-filter:blur(20px);border:1px solid rgba(85,255,85,0.3);border-radius:24px;padding:12px;z-index:260;text-align:center;box-shadow:0 20px 50px rgba(0,0,0,0.7);}
 </style>
 </head>
 <body>
@@ -55,11 +52,11 @@ canvas{background:linear-gradient(#70b5ff,#90c7ff);border:2px solid rgba(85,255,
 <div style="position:absolute;bottom:10px;right:20px;font-size:9px;color:#55ff55;">Creator: Vladislav</div>
 </div>
 <div id="customPromptModal">
-<h3 id="customPromptTitle" style="color:#ffcc00;margin:0 0 10px 0;font-size:14px;">DEVELOPER PANEL</h3>
-<input type="password" id="customPromptInput" style="width:90%;background:#161d2a;border:2px solid #55ff55;color:#fff;padding:10px;border-radius:10px;text-align:center;margin-bottom:12px;outline:none;" placeholder="...">
+<h3 id="customPromptTitle" style="color:#ffcc00;margin:0 0 10px 0;font-size:12px;">DEVELOPER PANEL</h3>
+<input type="password" id="customPromptInput" style="width:90%;background:#161d2a;border:2px solid #55ff55;color:#fff;padding:8px;border-radius:10px;text-align:center;margin-bottom:10px;outline:none;" placeholder="...">
 <div style="display:flex;justify-content:center;gap:10px;">
-<button class="circle-btn" style="width:100px;border-radius:8px;" onclick="submitCustomPrompt()">OK</button>
-<button class="circle-btn" style="width:100px;border-radius:8px;border-color:#ff2222;color:#ff5555;" onclick="closeCustomPrompt()">CANCEL</button>
+<button class="circle-btn" style="width:80px;border-radius:8px;" onclick="submitCustomPrompt()">OK</button>
+<button class="circle-btn" style="width:80px;border-radius:8px;border-color:#ff2222;color:#ff5555;" onclick="closeCustomPrompt()">CANCEL</button>
 </div>
 </div>
 <div id="fullAdminPanel">
@@ -72,28 +69,46 @@ canvas{background:linear-gradient(#70b5ff,#90c7ff);border:2px solid rgba(85,255,
 <div id="adminContent" class="admin-content"></div>
 </div>
 <div id="worldModal">
-<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-<h3 style="color:#ffcc00;margin:0;font-size:14px;">WORLDS (MAX 3)</h3>
-<button class="circle-btn" style="width:32px;height:32px;line-height:28px;border-color:#55ff55;color:#55ff55;" onclick="openCreateMenuInternal()">+</button>
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+<h3 style="color:#ffcc00;margin:0;font-size:12px;">WORLDS (MAX 3)</h3>
+<button class="circle-btn" style="width:30px;height:30px;line-height:26px;border-color:#55ff55;color:#55ff55;" onclick="openCreateMenuInternal()">+</button>
 </div>
-<div id="worldsListContainer" style="max-height:100px;overflow-y:auto;margin-bottom:10px;background:rgba(0,0,0,0.3);border-radius:8px;padding:4px;"></div>
-<button class="menu-nav-btn" style="width:100%;background:rgba(255,34,34,0.2);border-color:#ff2222;" onclick="closePopups()">BACK</button>
+<div id="worldsListContainer" style="max-height:85px;overflow-y:auto;margin-bottom:8px;background:rgba(0,0,0,0.3);border-radius:8px;padding:4px;"></div>
+<button class="menu-nav-btn" style="width:100%;height:32px;line-height:30px;background:rgba(255,34,34,0.2);border-color:#ff2222;" onclick="closePopups()">BACK</button>
 </div>
-<div id="createWorldPopup" class="modal" style="z-index:270;top:12%;">
+<div id="createWorldPopup" class="modal">
 <div class="modal-title">CREATE NEW WORLD</div>
-<input type="text" id="newWorldName" class="auth-input" style="width:90%;margin:4px;" placeholder="World Name">
-<div class="craft-row"><span>Mode:</span><select id="newWorldMode" style="background:#161d2a;color:#fff;border:1px solid #55ff55;padding:4px;border-radius:6px;outline:none;"><option value="survival">Survival</option><option value="creative">Creative</option></select></div>
-<div class="craft-row"><span>Difficulty:</span><select id="newWorldDiff" style="background:#161d2a;color:#fff;border:1px solid #55ff55;padding:4px;border-radius:6px;outline:none;"><option value="easy">Easy</option><option value="normal">Normal</option><option value="hard">Hardcore</option></select></div>
-<div style="display:flex;gap:10px;margin-top:10px;"><button class="circle-btn" style="width:100px;border-radius:8px;" onclick="confirmCreateWorld()">CREATE</button><button class="circle-btn" style="width:100px;border-radius:8px;border-color:#ff2222;color:#ff5555;" onclick="closeCreateMenuInternal()">CANCEL</button></div>
+<input type="text" id="newWorldName" class="auth-input" style="width:90%;padding:8px;font-size:12px;margin:3px auto;display:block;" placeholder="World Name">
+<div class="craft-row"><span>Mode:</span><select id="newWorldMode" style="background:#161d2a;color:#fff;border:1px solid #55ff55;padding:3px;border-radius:6px;outline:none;"><option value="survival">Survival</option><option value="creative">Creative</option></select></div>
+<div class="craft-row"><span>Difficulty:</span><select id="newWorldDiff" style="background:#161d2a;color:#fff;border:1px solid #55ff55;padding:3px;border-radius:6px;outline:none;"><option value="easy">Easy</option><option value="normal">Normal</option><option value="hard">Hardcore</option></select></div>
+<div style="display:flex;justify-content:center;gap:10px;margin-top:8px;">
+<button class="circle-btn" style="width:80px;border-radius:8px;" onclick="confirmCreateWorld()">CREATE</button>
+<button class="circle-btn" style="width:80px;border-radius:8px;border-color:#ff2222;color:#ff5555;" onclick="closeCreateMenuInternal()">CANCEL</button>
 </div>
-<div id="loadingBlock"><div class="mc-logo" style="font-size:24px;">LOADING...</div><div class="progress-container"><div id="pBar" class="progress-bar"></div></div></div>
-<div id="gameUI"><div class="hud-top"><div>HP:<span id="hp">100</span> | FOOD:<span id="hunger">100</span> | XP:<span id="xp">0</span></div><div>ARMOR:<span id="armor">0</span> | WORLD:<span id="dimState">Overworld</span></div></div><canvas id="mcCanvas" width="360" height="320"></canvas>
-<div id="craftModal" class="modal"><div class="modal-title">CRAFTING TABLE</div>
-<div class="craft-row"><span>Sticks (1 Wood)</span><button class="circle-btn" style="width:50px;height:24px;border-radius:6px;line-height:22px;" onclick="craftItem('sticks')">OK</button></div>
-<div class="craft-row"><span>Mace (1 Rod + 1 Core)</span><button class="circle-btn" style="width:50px;height:24px;border-radius:6px;line-height:22px;" onclick="craftItem('mace')">OK</button></div>
-<div class="craft-row"><span>Leather Chestplate (8 Leather)</span><button class="circle-btn" style="width:50px;height:24px;border-radius:6px;line-height:22px;" onclick="craftItem('leather_chest')">OK</button></div>
-<div class="craft-row"><span>TNT (3 Sand + 2 Coal)</span><button class="circle-btn" style="width:50px;height:24px;border-radius:6px;line-height:22px;" onclick="craftItem('tnt')">OK</button></div>
-<button class="circle-btn" style="width:100%;height:32px;background:#ff2222;color:#fff;border-radius:10px;margin-top:6px;line-height:30px;" onclick="closeModals()">CLOSE</button></div>
+</div>
+<div id="loadingBlock">
+<div class="mc-logo" style="font-size:22px;">LOADING...</div>
+<div class="progress-container"><div id="pBar" class="progress-bar"></div></div>
+</div>
+<div id="gameUI">
+<div class="hud-top">
+<div>HP:<span id="hp">100</span> | FOOD:<span id="hunger">100</span> | XP:<span id="xp">0</span></div>
+<div>ARMOR:<span id="armor">0</span> | WORLD:<span id="dimState">Overworld</span></div>
+</div>
+<canvas id="mcCanvas" width="360" height="320"></canvas>
+<div id="craftModal" class="modal">
+<div class="modal-title">CRAFTING TABLE</div>
+<div class="craft-row"><span>Sticks (1 Wood)</span><button class="circle-btn" style="width:45px;height:22px;border-radius:6px;line-height:20px;" onclick="craftItem('sticks')">OK</button></div>
+<div class="craft-row"><span>Torch (1 Coal + 1 Stick)</span><button class="circle-btn" style="width:45px;height:22px;border-radius:6px;line-height:20px;" onclick="craftItem('torch')">OK</button></div>
+<div class="craft-row"><span>Iron Sword (2 Iron)</span><button class="circle-btn" style="width:45px;height:22px;border-radius:6px;line-height:20px;" onclick="craftItem('iron_sword')">OK</button></div>
+<div class="craft-row"><span>Mace (1 Rod + 1 Core)</span><button class="circle-btn" style="width:45px;height:22px;border-radius:6px;line-height:20px;" onclick="craftItem('mace')">OK</button></div>
+<div class="craft-row"><span>TNT (3 Sand + 2 Coal)</span><button class="circle-btn" style="width:45px;height:22px;border-radius:6px;line-height:20px;" onclick="craftItem('tnt')">OK</button></div>
+<div class="craft-row"><span>Leather Helmet (5 Leather)</span><button class="circle-btn" style="width:45px;height:22px;border-radius:6px;line-height:20px;" onclick="craftItem('leather_helmet')">OK</button></div>
+<div class="craft-row"><span>Leather Chestplate (8 Leather)</span><button class="circle-btn" style="width:45px;height:22px;border-radius:6px;line-height:20px;" onclick="craftItem('leather_chest')">OK</button></div>
+<div class="craft-row"><span>Leather Leggings (7 Leather)</span><button class="circle-btn" style="width:45px;height:22px;border-radius:6px;line-height:20px;" onclick="craftItem('leather_leggings')">OK</button></div>
+<div class="craft-row"><span>Leather Boots (4 Leather)</span><button class="circle-btn" style="width:45px;height:22px;border-radius:6px;line-height:20px;" onclick="craftItem('leather_boots')">OK</button></div>
+<button class="circle-btn" style="width:100%;height:28px;background:#ff2222;color:#fff;border-radius:8px;margin-top:4px;line-height:26px;" onclick="closeModals()">CLOSE</button>
+</div>
 <div class="joystick-panel">
 <div></div><button class="circle-btn" onclick="movePlayer(0,-14)">W</button><div></div>
 <button class="circle-btn" onclick="movePlayer(-14,0)">A</button><button class="circle-btn" onclick="playerJump()">JMP</button><button class="circle-btn" onclick="movePlayer(14,0)">D</button>
